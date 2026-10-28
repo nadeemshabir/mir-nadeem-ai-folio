@@ -4,7 +4,7 @@ export const profile = {
   degree: "Final year B.Tech",
   school: "IIT Bombay",
   classYear: "Class of 2027",
-  location: "Mumbai",
+  location: "IIT Bombay",
   email: "mirnadeem2021@gmail.com",
   phone: "+91 60069 36298",
   phoneHref: "tel:+916006936298",
@@ -13,7 +13,8 @@ export const profile = {
   github: "https://github.com/nadeemshabir",
   githubHandle: "nadeemshabir",
   linkedin: "https://www.linkedin.com/in/nadeem-shabir-278022280",
-  portraitSrc: "/portrait.jpg",
+  portraitSrc: "/nadeem-portrait.jpg",
+  portraitFaceSrc: "/nadeem-avatar.jpg",
   availability:
     "Open to AI engineering and software engineering roles.",
 };

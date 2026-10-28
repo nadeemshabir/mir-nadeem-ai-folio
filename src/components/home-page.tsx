@@ -13,6 +13,62 @@ const projectFlow: Record<string, string[]> = {
   "swe-agent": ["search", "read", "edit", "run tests", "observe"],
 };
 
+// Every skill named across roles and projects, de-duplicated, for the scrolling strip.
+const stack = Array.from(new Set([...roles, ...projects].flatMap((item) => item.skills)));
+
+function HeroPortrait() {
+  return (
+    <div className="relative hidden animate-rise [animation-delay:200ms] lg:block">
+      <div
+        aria-hidden
+        className="absolute -inset-8 rounded-[3rem] bg-[radial-gradient(closest-side,rgb(255_154_92/0.22),transparent)] blur-2xl"
+      />
+      <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-white/10 bg-surface shadow-[0_30px_80px_rgb(0_0_0/0.55)]">
+        {/* The card is hidden below lg, so "1px" there makes phones fetch only a tiny candidate instead of the full photo. */}
+        <Image
+          src={profile.portraitSrc}
+          alt={`Portrait of ${profile.name}`}
+          fill
+          loading="eager"
+          fetchPriority="high"
+          sizes="(min-width: 1024px) 360px, 1px"
+          quality={90}
+          className="origin-[50%_30%] scale-[1.06] object-cover"
+        />
+        {/* Settles the busy background into the page and frames the face. */}
+        <div
+          aria-hidden
+          className="absolute inset-0 rounded-[inherit] bg-gradient-to-t from-background/55 via-transparent to-transparent shadow-[inset_0_0_0_1px_rgb(255_255_255/0.06)]"
+        />
+      </div>
+    </div>
+  );
+}
+
+function StackMarquee() {
+  const items = [...stack, ...stack];
+  return (
+    <div
+      aria-label="Tools I work with"
+      className="relative overflow-hidden border-y border-border bg-surface/40 py-5 [mask-image:linear-gradient(to_right,transparent,#000_10%,#000_90%,transparent)]"
+    >
+      {/* Trailing padding (not a gap) on each item keeps the two copies exactly half the width, so the loop is seamless. */}
+      <ul className="flex w-max animate-marquee items-center hover:[animation-play-state:paused]">
+        {items.map((skill, index) => (
+          <li
+            key={`${skill}-${index}`}
+            aria-hidden={index >= stack.length}
+            className="flex items-center gap-10 pr-10 font-mono text-sm whitespace-nowrap text-muted-foreground"
+          >
+            {skill}
+            <span aria-hidden className="size-1 rounded-full bg-oxide/60" />
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 function splitMeta(meta: string) {
   const at = meta.lastIndexOf(", ");
   if (at === -1) return { org: meta, dates: "" };
@@ -160,17 +216,36 @@ export function HomePage() {
   return (
     <main id="content">
       {/* Hero */}
-      <section className="mx-auto grid max-w-6xl gap-12 px-5 pt-14 pb-16 sm:px-8 sm:pt-24 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-center lg:gap-16">
+      <section className="mx-auto grid max-w-6xl gap-16 px-5 pt-12 pb-20 sm:px-8 sm:pt-20 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-center lg:gap-20 lg:pb-28">
         <div>
           <p className="inline-flex animate-rise items-center gap-2.5 rounded-full border border-border bg-surface/70 py-1.5 pr-3.5 pl-3 text-xs text-muted-foreground backdrop-blur">
             <span className="size-2 animate-pulse-dot rounded-full bg-live" />
             {profile.availability}
           </p>
-          <h1 className="mt-7 animate-rise font-serif text-6xl leading-[0.95] tracking-tight [animation-delay:80ms] sm:text-7xl lg:text-8xl">
-            Nadeem
-            <br />
-            <span className="text-muted-foreground italic">Shabir Mir</span>
-          </h1>
+          <div className="mt-7 flex animate-rise items-end justify-between gap-4 [animation-delay:80ms]">
+            <h1 className="font-serif text-[3.25rem] leading-[0.95] tracking-tight sm:text-7xl lg:text-8xl">
+              Nadeem
+              <br />
+              <span className="text-muted-foreground italic">Shabir Mir</span>
+            </h1>
+            {/* Phones and tablets get a round avatar; the full portrait card shows from lg up. */}
+            <div className="relative shrink-0 lg:hidden">
+              <div
+                aria-hidden
+                className="absolute -inset-3 rounded-full bg-[radial-gradient(closest-side,rgb(255_154_92/0.28),transparent)] blur-md"
+              />
+              <div className="relative size-24 overflow-hidden rounded-full bg-surface shadow-[0_12px_32px_rgb(0_0_0/0.5)] ring-1 ring-white/15 ring-offset-4 ring-offset-background sm:size-32">
+                <Image
+                  src={profile.portraitFaceSrc}
+                  alt={`Portrait of ${profile.name}`}
+                  fill
+                  sizes="128px"
+                  quality={90}
+                  className="origin-[50%_40%] scale-110 object-cover"
+                />
+              </div>
+            </div>
+          </div>
           <p className="mt-7 max-w-xl animate-rise text-lg leading-relaxed text-muted-foreground [animation-delay:160ms] sm:text-xl">
             {profile.degree} at <span className="text-foreground">{profile.school}</span>. I build AI systems for
             documents, retrieval, speech, and software agents, and I pick the design by measuring it.
@@ -201,15 +276,6 @@ export function HomePage() {
               <ArrowUpRight className="size-3.5 text-muted-foreground" />
             </a>
             <div className="ml-1 flex items-center gap-1">
-              <a
-                href={profile.whatsapp}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="grid size-11 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-[#25d366]"
-              >
-                <WhatsAppIcon className="size-5" />
-                <span className="sr-only">WhatsApp</span>
-              </a>
               <a
                 href={profile.github}
                 target="_blank"
@@ -244,32 +310,20 @@ export function HomePage() {
               <WhatsAppIcon className="size-4 text-[#25d366]" />
               Chat on WhatsApp
             </a>
+            <span className="inline-flex items-center gap-2">
+              <MapPin className="size-4 text-oxide" />
+              {profile.location} · {profile.classYear}
+            </span>
           </p>
         </div>
 
-        <div className="relative mx-auto w-full max-w-[300px] animate-rise [animation-delay:200ms] lg:max-w-none">
-          <div aria-hidden className="absolute -inset-3 rounded-[2rem] bg-gradient-to-br from-oxide/30 via-transparent to-transparent blur-2xl" />
-          <div className="relative aspect-[4/5] overflow-hidden rounded-[1.75rem] border border-border bg-surface">
-            <Image
-              src={profile.portraitSrc}
-              alt={`Portrait of ${profile.name}`}
-              fill
-              priority
-              sizes="(min-width: 1024px) 340px, 300px"
-              quality={90}
-              className="object-cover object-[center_20%] grayscale-[15%]"
-            />
-            <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-background/80 to-transparent" />
-          </div>
-          <div className="absolute -bottom-4 left-4 flex items-center gap-2 rounded-full border border-border bg-surface/90 px-3.5 py-2 text-xs backdrop-blur-md sm:-left-6">
-            <MapPin className="size-3.5 text-oxide" />
-            {profile.location} · {profile.classYear}
-          </div>
-        </div>
+        <HeroPortrait />
       </section>
 
+      <StackMarquee />
+
       {/* Experience */}
-      <section id="work" className="mx-auto max-w-6xl scroll-mt-24 px-5 pt-16 sm:px-8">
+      <section id="work" className="mx-auto max-w-6xl scroll-mt-24 px-5 pt-24 sm:px-8">
         <SectionHeading index="01" kicker="Experience" title="Where I've worked" />
         <ol className="mt-14">
           {roles.map((role, index) => (
