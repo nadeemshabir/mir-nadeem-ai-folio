@@ -14,8 +14,8 @@ export default function OpenGraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#232833",
-          color: "#e8edf4",
+          background: "#0a0b0d",
+          color: "#ecebe6",
           padding: "72px",
         }}
       >
@@ -26,7 +26,7 @@ export default function OpenGraphImage() {
             fontSize: 22,
             letterSpacing: 3,
             textTransform: "uppercase",
-            color: "#9ec4f5",
+            color: "#ff9a5c",
           }}
         >
           <span>IIT Bombay, Class of 2027</span>
@@ -38,7 +38,7 @@ export default function OpenGraphImage() {
             Documents, retrieval, speech, and software agents.
           </div>
         </div>
-        <div style={{ display: "flex", fontSize: 24, color: "#b7c2d1" }}>
+        <div style={{ display: "flex", fontSize: 24, color: "#a2a5ac" }}>
           mirnadeem2021@gmail.com · github.com/nadeemshabir
         </div>
       </div>

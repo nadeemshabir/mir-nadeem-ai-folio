@@ -51,12 +51,15 @@ export function SiteHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/80 bg-background/90 backdrop-blur-md">
-      <div className="mx-auto flex h-14 max-w-3xl items-center justify-between gap-4 px-5">
-        <Link href="/" className="text-base font-medium text-foreground">
+    <header className="sticky top-0 z-40 px-3 pt-3 sm:px-5">
+      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 rounded-full border border-border/80 bg-background/70 pr-2 pl-5 shadow-[0_8px_30px_rgb(0_0_0/0.35)] backdrop-blur-xl">
+        <Link href="/" className="flex items-center gap-2.5 text-sm font-medium text-foreground">
+          <span className="grid size-7 place-items-center rounded-full bg-foreground font-serif text-base text-background italic">
+            N
+          </span>
           {profile.shortName}
         </Link>
-        <nav className="hidden items-center gap-5 sm:flex" aria-label="Sections">
+        <nav className="hidden items-center gap-1 sm:flex" aria-label="Sections">
           {nav.map((item) => {
             const isActive = active === item.id;
             return (
@@ -65,8 +68,8 @@ export function SiteHeader() {
                 href={item.href}
                 aria-current={isActive ? "true" : undefined}
                 className={cn(
-                  "text-sm text-muted-foreground hover:text-foreground",
-                  isActive && "text-foreground",
+                  "rounded-full px-3.5 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground",
+                  isActive && "bg-secondary text-foreground",
                 )}
                 onClick={(event) => {
                   if (!document.getElementById(item.id)) return;
@@ -79,12 +82,18 @@ export function SiteHeader() {
               </a>
             );
           })}
+          <a
+            href={`mailto:${profile.email}`}
+            className="ml-2 inline-flex h-10 items-center rounded-full bg-foreground px-4 text-sm font-medium text-background transition-colors hover:bg-oxide"
+          >
+            Say hello
+          </a>
         </nav>
         <Button
           type="button"
-          variant="outline"
+          variant="ghost"
           size="icon"
-          className="size-11 sm:hidden"
+          className="size-10 rounded-full sm:hidden"
           aria-expanded={open}
           aria-controls="site-menu"
           onClick={() => setOpen((value) => !value)}
@@ -97,7 +106,7 @@ export function SiteHeader() {
         <nav
           id="site-menu"
           aria-label="Sections"
-          className="border-t border-border bg-background px-5 py-3 sm:hidden"
+          className="mx-auto mt-2 max-w-6xl rounded-3xl border border-border bg-surface/95 px-5 py-3 backdrop-blur-xl sm:hidden"
         >
           <ul className="flex flex-col">
             {nav.map((item) => (
@@ -121,7 +130,7 @@ export function SiteHeader() {
           </ul>
           <a
             href={`mailto:${profile.email}`}
-            className={cn(buttonVariants({ size: "lg" }), "mt-3 h-11 w-full")}
+            className={cn(buttonVariants({ size: "lg" }), "mt-3 h-11 w-full rounded-full")}
             onClick={() => setOpen(false)}
           >
             Email {profile.shortName}

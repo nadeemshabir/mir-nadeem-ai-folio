@@ -33,7 +33,7 @@ export function CopyEmail({
         type="button"
         variant="outline"
         size="lg"
-        className={cn("h-11 px-4", tone === "inverse" && "text-[#1c1915] hover:text-[#1c1915]")}
+        className={cn("h-11 rounded-full px-5", tone === "inverse" && "text-[#1c1915] hover:text-[#1c1915]")}
         onClick={onCopy}
       >
         {state === "copied" ? <Check /> : <Copy />}

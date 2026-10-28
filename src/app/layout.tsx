@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { HashScroll } from "@/components/hash-scroll";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -15,6 +15,13 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
 });
 
 const description =
@@ -54,7 +61,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#232833",
+  themeColor: "#0a0b0d",
   colorScheme: "dark",
 };
 
@@ -85,16 +92,20 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-background text-foreground">
+      <body className="relative isolate min-h-full overflow-x-clip bg-background text-foreground">
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[52rem]">
+          <div className="glow absolute inset-0" />
+          <div className="bg-grid absolute inset-0" />
+        </div>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <a
           href="#content"
-          className="absolute top-3 left-3 z-50 -translate-y-24 bg-primary px-3 py-2 text-sm text-primary-foreground focus:translate-y-0"
+          className="absolute top-3 left-3 z-50 -translate-y-24 rounded-md bg-primary px-3 py-2 text-sm text-primary-foreground focus:translate-y-0"
         >
           Skip to content
         </a>
